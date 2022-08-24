@@ -8,16 +8,30 @@ public class Statistics {
     public Statistics() {
     }
 
-    public Statistics(long closedInstitutions, long faculties, long femaleEnrolment, long maleEnrolment, long newInstitutions, long placement, long studentsPassed, long totalInstitutions, long totalIntake) {
+    public Statistics(long totalInstitutions, long closedInstitutions, long newInstitutions, long totalIntake, long femaleEnrolment, long maleEnrolment, long faculties, long studentsPassed, long placement) {
+        this.totalInstitutions = totalInstitutions;
         this.closedInstitutions = closedInstitutions;
-        this.faculties = faculties;
+        this.newInstitutions = newInstitutions;
+        this.totalIntake = totalIntake;
         this.femaleEnrolment = femaleEnrolment;
         this.maleEnrolment = maleEnrolment;
-        this.newInstitutions = newInstitutions;
-        this.placement = placement;
+        this.faculties = faculties;
         this.studentsPassed = studentsPassed;
-        this.totalInstitutions = totalInstitutions;
-        this.totalIntake = totalIntake;
+        this.placement = placement;
+    }
+
+
+    public Statistics(Statistics statistics) {
+        this.totalInstitutions = statistics.getTotalInstitutions();
+        this.closedInstitutions = statistics.getClosedInstitutions();
+        this.newInstitutions = statistics.getNewInstitutions();
+        this.totalIntake = statistics.getTotalIntake();
+        this.femaleEnrolment = statistics.getFemaleEnrolment();
+        this.maleEnrolment = statistics.getMaleEnrolment();
+        this.faculties = statistics.getFaculties();
+        this.studentsPassed = statistics.getStudentsPassed();
+        this.placement = statistics.getPlacement();
+
     }
 
     public long getClosedInstitutions() {
@@ -102,6 +116,18 @@ public class Statistics {
         this.faculties += statistics.getFaculties();
         this.studentsPassed += statistics.getStudentsPassed();
         this.placement += statistics.getPlacement();
+    }
+
+    public void subtract(Statistics statistics) {
+        this.totalInstitutions -= statistics.getTotalInstitutions();
+        this.closedInstitutions -= statistics.getClosedInstitutions();
+        this.newInstitutions -= statistics.getNewInstitutions();
+        this.totalIntake -= statistics.getTotalIntake();
+        this.femaleEnrolment -= statistics.getFemaleEnrolment();
+        this.maleEnrolment -= statistics.getMaleEnrolment();
+        this.faculties -= statistics.getFaculties();
+        this.studentsPassed -= statistics.getStudentsPassed();
+        this.placement -= statistics.getPlacement();
     }
 
 }
