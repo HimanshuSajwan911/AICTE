@@ -17,7 +17,7 @@ import java.util.Date;
 public class NewsAdapter extends FirestoreRecyclerAdapter<News, NewsAdapter.NewsHolder> {
 
 
-    public NewsAdapter(@NonNull FirestoreRecyclerOptions options) {
+    public NewsAdapter(@NonNull FirestoreRecyclerOptions<News> options) {
         super(options);
     }
 
@@ -45,9 +45,9 @@ public class NewsAdapter extends FirestoreRecyclerAdapter<News, NewsAdapter.News
     }
 
 
-    class NewsHolder extends RecyclerView.ViewHolder{
+    static class NewsHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvTimestamp, tvHeadline, tvBody, tvAuthor;
+        private final TextView tvTimestamp, tvHeadline, tvBody, tvAuthor;
 
         public NewsHolder(@NonNull View itemView) {
             super(itemView);
