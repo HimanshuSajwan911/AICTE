@@ -9,4 +9,8 @@
         android:id="@+id/menuItem_activity_main_home"
         android:icon="@drawable/ic_baseline_home_24"
         android:title="@string/home" />
+    <item
+        android:id="@+id/menuItem_activity_main_statistics"
+        android:icon="@drawable/statistics_24"
+        android:title="@string/statistics" />
 </menu>
