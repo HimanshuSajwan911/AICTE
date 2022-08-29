@@ -1,5 +1,7 @@
 package com.himanshu.aicte.common.statistics;
 
+import androidx.annotation.NonNull;
+
 public class Statistics {
 
     private long totalInstitutions, closedInstitutions, newInstitutions, totalIntake,
@@ -130,4 +132,19 @@ public class Statistics {
         this.placement -= statistics.getPlacement();
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "Statistics{" +
+                "totalInstitutions=" + totalInstitutions +
+                ", closedInstitutions=" + closedInstitutions +
+                ", newInstitutions=" + newInstitutions +
+                ", totalIntake=" + totalIntake +
+                ", femaleEnrolment=" + femaleEnrolment +
+                ", maleEnrolment=" + maleEnrolment +
+                ", faculties=" + faculties +
+                ", studentsPassed=" + studentsPassed +
+                ", placement=" + placement +
+                '}';
+    }
 }
