@@ -211,11 +211,11 @@ public class UserProfileFragment extends Fragment {
         TextView tvUserId = mView.findViewById(R.id.textView_fragment_user_profile_user_id);
         tvUserId.setText(getString(R.string.user_id));
 
-        etFirstName.setText(R.string.first_name);
-        etLastName.setText(R.string.last_name);
-        etEmail.setText(R.string.email);
-        etPhone.setText(R.string.phone_number);
-        etGender.setText(R.string.gender);
+        etFirstName.setText(getString(R.string.first_name));
+        etLastName.setText(getString(R.string.last_name));
+        etEmail.setText(getString(R.string.email));
+        etPhone.setText(getString(R.string.phone_number));
+        etGender.setText(getString(R.string.gender));
 
         displaySignInButton();
 
