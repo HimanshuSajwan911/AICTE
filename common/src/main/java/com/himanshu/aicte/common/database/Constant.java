@@ -5,15 +5,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Constant {
 
-    public static final FirebaseFirestore DB_ROOT_REFERENCE = FirebaseFirestore.getInstance();
+    public static final CollectionReference NEWS_COLLECTION_REFERENCE = FirebaseFirestore.getInstance().collection(Constant.COLLECTION_NEWS);
 
-    public static final CollectionReference NEWS_COLLECTION_REFERENCE = DB_ROOT_REFERENCE.collection(Constant.COLLECTION_NEWS);
+    public static final CollectionReference STATISTICS_COLLECTION_REFERENCE = FirebaseFirestore.getInstance().collection(Constant.COLLECTION_STATISTICS);
 
-    public static final CollectionReference STATISTICS_COLLECTION_REFERENCE = DB_ROOT_REFERENCE.collection(Constant.COLLECTION_STATISTICS);
+    public static final CollectionReference ADMIN_COLLECTION_REFERENCE = FirebaseFirestore.getInstance().collection(Constant.COLLECTION_ADMIN);
 
-    public static final CollectionReference ADMIN_COLLECTION_REFERENCE = DB_ROOT_REFERENCE.collection(Constant.COLLECTION_ADMIN);
-
-    public static final CollectionReference USER_COLLECTION_REFERENCE = DB_ROOT_REFERENCE.collection(Constant.COLLECTION_USER);
+    public static final CollectionReference USER_COLLECTION_REFERENCE = FirebaseFirestore.getInstance().collection(Constant.COLLECTION_USER);
 
     public static final String COLLECTION_NEWS = "News";
 
