@@ -2,7 +2,9 @@ package com.himanshu.aicte.common.user;
 
 import static android.app.Activity.RESULT_OK;
 import static com.himanshu.aicte.common.database.Constant.ADMIN_COLLECTION_REFERENCE;
+import static com.himanshu.aicte.common.database.Constant.ADMIN_PROFILE_IMAGE_PATH;
 import static com.himanshu.aicte.common.database.Constant.USER_COLLECTION_REFERENCE;
+import static com.himanshu.aicte.common.database.Constant.USER_PROFILE_IMAGE_PATH;
 
 import android.app.ProgressDialog;
 import android.content.ClipData;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +31,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.himanshu.aicte.common.R;
 import com.himanshu.aicte.common.user.authentication.SignInActivity;
+import com.himanshu.aicte.common.util.GlideApp;
 
 public class UserProfileFragment extends Fragment {
 
@@ -43,6 +47,8 @@ public class UserProfileFragment extends Fragment {
     private static final int RESULT_CODE_SIGN_IN = 111;
 
     private EditText etFirstName, etLastName, etEmail, etPhone, etGender;
+
+    private ImageView ivProfilePicture;
 
     private View mView;
 
@@ -78,6 +84,8 @@ public class UserProfileFragment extends Fragment {
             actionBar.setTitle("Profile");
         }
 
+        ivProfilePicture = mView.findViewById(R.id.imageView_fragment_user_profile_picture);
+
         etFirstName = mView.findViewById(R.id.textInputEditText_fragment_user_profile_first_name);
         etLastName = mView.findViewById(R.id.textInputEditText_fragment_user_profile_last_name);
         etEmail = mView.findViewById(R.id.textInputEditText_fragment_user_profile_email);
@@ -95,13 +103,36 @@ public class UserProfileFragment extends Fragment {
             displaySignInButton();
             startSignInActivity();
         } else {
+            displayProfileImage();
             displayUserProfile();
         }
 
         return mView;
     }
 
-    public void displayUserProfile() {
+    private void displayProfileImage(){
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference pathReference;
+
+        if (mUserType.equals(User.TYPE_ADMIN)) {
+            pathReference = storageReference.child(ADMIN_PROFILE_IMAGE_PATH);
+        } else {
+            pathReference = storageReference.child(USER_PROFILE_IMAGE_PATH);
+        }
+
+        pathReference = pathReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        GlideApp.with(this)
+                .load(pathReference)
+                .error(R.drawable.image_user_profile_100x117)
+                .placeholder(R.drawable.image_user_profile_100x117)
+                .circleCrop()
+                .into(ivProfilePicture);
+    }
+
+
+    private void displayUserProfile() {
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String userIdText = "User ID: " + userId;
@@ -133,30 +164,27 @@ public class UserProfileFragment extends Fragment {
         progressDialog.setProgress(0);
 
         progressDialog.show();
-        documentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                progressDialog.dismiss();
-                if (task.isSuccessful()) {
+        documentUser.get().addOnCompleteListener(task -> {
+            progressDialog.dismiss();
+            if (task.isSuccessful()) {
 
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        User user = task.getResult().toObject(User.class);
-                        etFirstName.setText(user.getFirstName());
-                        etLastName.setText(user.getLastName());
-                        etEmail.setText(user.getEmail());
-                        etPhone.setText(user.getPhone());
-                        etGender.setText(user.getGender());
-                    } else {
-                        Toast.makeText(getContext(), "User data does not exists.", Toast.LENGTH_SHORT).show();
-                    }
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    User user = task.getResult().toObject(User.class);
+                    etFirstName.setText(user.getFirstName());
+                    etLastName.setText(user.getLastName());
+                    etEmail.setText(user.getEmail());
+                    etPhone.setText(user.getPhone());
+                    etGender.setText(user.getGender());
                 } else {
-                    String errMessage = task.getException().getMessage();
-                    if (errMessage == null) {
-                        errMessage = "Could not  retrieve user profile";
-                    }
-                    Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "User data does not exists.", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                String errMessage = task.getException().getMessage();
+                if (errMessage == null) {
+                    errMessage = "Could not retrieve user profile";
+                }
+                Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -198,12 +226,7 @@ public class UserProfileFragment extends Fragment {
     private void displaySignInButton(){
         Button buttonSignIn = mView.findViewById(R.id.button_fragment_user_profile_sign_in);
         buttonSignIn.setVisibility(View.VISIBLE);
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startSignInActivity();
-            }
-        });
+        buttonSignIn.setOnClickListener(v -> startSignInActivity());
     }
 
     private void resetForm(){
@@ -237,6 +260,9 @@ public class UserProfileFragment extends Fragment {
                 refreshUserProfile();
                 return true;
             } else if (id == R.id.menuItem_fragment_user_profile_update_profile) {
+                Intent intentUserProfileEditor = new Intent(getContext(), UserProfileEditorActivity.class);
+                intentUserProfileEditor.putExtra("userType", mUserType);
+                startActivity(intentUserProfileEditor);
 
             } else if (id == R.id.menuItem_fragment_user_profile_sign_out) {
                 signOutUser();
