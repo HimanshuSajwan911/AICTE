@@ -1,6 +1,8 @@
 package com.himanshu.aicte.common.news;
 
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.Timestamp;
 
 public class News {
@@ -48,5 +50,16 @@ public class News {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "News{" +
+                "headline='" + headline + '\'' +
+                ", author='" + author + '\'' +
+                ", timestamp=" + timestamp +
+                ", body='" + body + '\'' +
+                '}';
     }
 }
