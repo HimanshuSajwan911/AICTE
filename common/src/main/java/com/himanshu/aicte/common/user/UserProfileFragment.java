@@ -98,6 +98,8 @@ public class UserProfileFragment extends Fragment {
         etPhone.setKeyListener(null);
         etGender.setKeyListener(null);
 
+        hideSignInButton();
+
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
 
             displaySignInButton();
@@ -216,11 +218,15 @@ public class UserProfileFragment extends Fragment {
         if (requestCode == RESULT_CODE_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 displayUserProfile();
-                Button buttonSignIn = mView.findViewById(R.id.button_fragment_user_profile_sign_in);
-                buttonSignIn.setVisibility(View.INVISIBLE);
+                hideSignInButton();
             }
         }
 
+    }
+
+    private void hideSignInButton(){
+        Button buttonSignIn = mView.findViewById(R.id.button_fragment_user_profile_sign_in);
+        buttonSignIn.setVisibility(View.INVISIBLE);
     }
 
     private void displaySignInButton(){
